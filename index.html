@@ -639,28 +639,30 @@
                     <div class="form-group">
                         <label>Quantity</label>
                         <div class="quantity-group">
-                            <div>
+                            <div class="quantity-item">
                                 <label for="skeins">Skeins</label>
                                 <input type="number" id="skeins" name="skeins" min="1" required>
                             </div>
-                            <div>
-                                <label for="weight_amount">Weight</label>
-                                <div class="unit-input-group">
-                                    <input type="number" id="weight_amount" name="weight_amount" min="1" required>
-                                    <select id="weight_unit" name="weight_unit" required>
-                                        <option value="g">grams</option>
-                                        <option value="oz">ounces</option>
-                                    </select>
+                            <div class="quantity-row">
+                                <div class="quantity-item">
+                                    <label for="weight_amount">Weight</label>
+                                    <div class="unit-input-group">
+                                        <input type="number" id="weight_amount" name="weight_amount" min="1" required>
+                                        <select id="weight_unit" name="weight_unit" required>
+                                            <option value="g">grams</option>
+                                            <option value="oz">ounces</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <label for="length">Length</label>
-                                <div class="unit-input-group">
-                                    <input type="number" id="length" name="length" min="1" required>
-                                    <select id="length_unit" name="length_unit" required>
-                                        <option value="m">meters</option>
-                                        <option value="yds">yards</option>
-                                    </select>
+                                <div class="quantity-item">
+                                    <label for="length">Length</label>
+                                    <div class="unit-input-group">
+                                        <input type="number" id="length" name="length" min="1" required>
+                                        <select id="length_unit" name="length_unit" required>
+                                            <option value="m">meters</option>
+                                            <option value="yds">yards</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
