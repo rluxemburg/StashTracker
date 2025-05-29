@@ -104,8 +104,22 @@
             gap: 10px;
         }
 
-        .quantity-group input {
-            width: 100%;
+        .unit-input-group {
+            display: flex;
+            gap: 5px;
+            align-items: stretch;
+        }
+
+        .unit-input-group input {
+            flex: 2;
+            margin: 0;
+        }
+
+        .unit-input-group select {
+            flex: 1;
+            margin: 0;
+            font-size: 0.9rem;
+            min-width: 80px;
         }
 
         .quantity-group label {
@@ -405,7 +419,63 @@
 
                     <div class="form-group">
                         <label for="color">Primary Color</label>
-                        <input type="text" id="color" name="color" placeholder="e.g., Blue, Red, Multicolor">
+                        <select id="color" name="color">
+                            <option value="">Select color...</option>
+                            <optgroup label="Neutrals">
+                                <option value="White">White</option>
+                                <option value="Cream">Cream</option>
+                                <option value="Beige">Beige</option>
+                                <option value="Tan">Tan</option>
+                                <option value="Brown">Brown</option>
+                                <option value="Black">Black</option>
+                                <option value="Gray">Gray</option>
+                                <option value="Silver">Silver</option>
+                            </optgroup>
+                            <optgroup label="Reds & Pinks">
+                                <option value="Red">Red</option>
+                                <option value="Burgundy">Burgundy</option>
+                                <option value="Pink">Pink</option>
+                                <option value="Rose">Rose</option>
+                                <option value="Coral">Coral</option>
+                                <option value="Magenta">Magenta</option>
+                            </optgroup>
+                            <optgroup label="Oranges & Yellows">
+                                <option value="Orange">Orange</option>
+                                <option value="Peach">Peach</option>
+                                <option value="Yellow">Yellow</option>
+                                <option value="Gold">Gold</option>
+                                <option value="Mustard">Mustard</option>
+                            </optgroup>
+                            <optgroup label="Greens">
+                                <option value="Green">Green</option>
+                                <option value="Forest Green">Forest Green</option>
+                                <option value="Sage">Sage</option>
+                                <option value="Mint">Mint</option>
+                                <option value="Olive">Olive</option>
+                                <option value="Teal">Teal</option>
+                            </optgroup>
+                            <optgroup label="Blues">
+                                <option value="Blue">Blue</option>
+                                <option value="Navy">Navy</option>
+                                <option value="Royal Blue">Royal Blue</option>
+                                <option value="Sky Blue">Sky Blue</option>
+                                <option value="Turquoise">Turquoise</option>
+                                <option value="Aqua">Aqua</option>
+                            </optgroup>
+                            <optgroup label="Purples">
+                                <option value="Purple">Purple</option>
+                                <option value="Lavender">Lavender</option>
+                                <option value="Violet">Violet</option>
+                                <option value="Plum">Plum</option>
+                                <option value="Mauve">Mauve</option>
+                            </optgroup>
+                            <optgroup label="Multicolor">
+                                <option value="Multicolor">Multicolor</option>
+                                <option value="Rainbow">Rainbow</option>
+                                <option value="Ombre">Ombre</option>
+                                <option value="Speckled">Speckled</option>
+                            </optgroup>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -439,12 +509,24 @@
                                 <input type="number" id="skeins" name="skeins" min="1" required>
                             </div>
                             <div>
-                                <label for="weight_amount">Weight (g/oz)</label>
-                                <input type="number" id="weight_amount" name="weight_amount" min="1" required>
+                                <label for="weight_amount">Weight</label>
+                                <div class="unit-input-group">
+                                    <input type="number" id="weight_amount" name="weight_amount" min="1" required>
+                                    <select id="weight_unit" name="weight_unit" required>
+                                        <option value="g">grams</option>
+                                        <option value="oz">ounces</option>
+                                    </select>
+                                </div>
                             </div>
                             <div>
-                                <label for="length">Length (m/yds)</label>
-                                <input type="number" id="length" name="length" min="1" required>
+                                <label for="length">Length</label>
+                                <div class="unit-input-group">
+                                    <input type="number" id="length" name="length" min="1" required>
+                                    <select id="length_unit" name="length_unit" required>
+                                        <option value="m">meters</option>
+                                        <option value="yds">yards</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -624,12 +706,14 @@
             const brand = document.getElementById('brand').value.trim();
             const weight = document.getElementById('weight').value;
             const colorway = document.getElementById('colorway').value.trim();
-            const color = document.getElementById('color').value.trim();
+            const color = document.getElementById('color').value;
             const dyeLot = document.getElementById('dyeLot').value.trim();
             const woolType = document.getElementById('woolType').value;
             const skeins = document.getElementById('skeins').value;
             const weight_amount = document.getElementById('weight_amount').value;
+            const weight_unit = document.getElementById('weight_unit').value;
             const length = document.getElementById('length').value;
+            const length_unit = document.getElementById('length_unit').value;
             const rating = document.getElementById('rating').value;
 
             // Get all yarn characteristics
@@ -641,10 +725,10 @@
                 }
             });
 
-            console.log('Form values:', {brand, weight, colorway, color, dyeLot, woolType, skeins, weight_amount, length, rating, characteristics});
+            console.log('Form values:', {brand, weight, colorway, color, dyeLot, woolType, skeins, weight_amount, weight_unit, length, length_unit, rating, characteristics});
 
             // Validate required fields
-            if (!brand || !weight || !colorway || !woolType || !skeins || !weight_amount || !length) {
+            if (!brand || !weight || !colorway || !woolType || !skeins || !weight_amount || !weight_unit || !length || !length_unit) {
                 console.log('Validation failed - missing required fields');
                 alert('Please fill in all required fields');
                 return;
@@ -660,7 +744,9 @@
                 woolType: woolType,
                 skeins: parseInt(skeins),
                 weight_amount: parseInt(weight_amount),
+                weight_unit: weight_unit,
                 length: parseInt(length),
+                length_unit: length_unit,
                 rating: parseInt(rating),
                 characteristics: characteristics,
                 dateAdded: new Date().toLocaleDateString()
@@ -718,11 +804,11 @@
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Weight</span>
-                            <div class="detail-value">${yarn.weight_amount}g/oz</div>
+                            <div class="detail-value">${yarn.weight_amount} ${yarn.weight_unit || 'g'}</div>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Length</span>
-                            <div class="detail-value">${yarn.length}m/yds</div>
+                            <div class="detail-value">${yarn.length} ${yarn.length_unit || 'm'}</div>
                         </div>
                         ${yarn.dyeLot ? `<div class="detail-item">
                             <span class="detail-label">Dye Lot</span>
