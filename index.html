@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stash Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .add-yarn-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #5a6acf;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #5a6acf;
+            box-shadow: 0 0 0 3px rgba(90, 106, 207, 0.1);
+        }
+
+        .quantity-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .quantity-group input {
+            width: 100%;
+        }
+
+        .quantity-group label {
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            transform: scale(1.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .stash-list {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .stash-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #5a6acf;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #5a6acf;
+            box-shadow: 0 0 0 3px rgba(90, 106, 207, 0.1);
+        }
+
+        .yarn-item {
+            background: #f8f9ff;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #5a6acf;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .yarn-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .yarn-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .yarn-brand {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .yarn-colorway {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .yarn-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #5a6acf;
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: #ff3742;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #5a6acf;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stats-title {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .data-status {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: #2ed573;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧶 Stash Tracker</h1>
+            <p>Organize your yarn collection with ease</p>
+            <div class="data-status" id="dataStatus">
+                Loading your stash...
+            </div>
+            <div class="stats">
+                <div class="stats-title">Total Yarns in Stash</div>
+                <div class="stats-number" id="yarnCount">0</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="add-yarn-form">
+                <h2 class="form-title">Add New Yarn</h2>
+                <div class="success-message" id="successMessage">
+                    Yarn added to your stash! 🎉
+                </div>
+                <form id="yarnForm">
+                    <div class="form-group">
+                        <label for="brand">Yarn Brand</label>
+                        <input type="text" id="brand" name="brand" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight">Yarn Weight</label>
+                        <select id="weight" name="weight" required>
+                            <option value="">Select weight...</option>
+                            <option value="Lace">Lace</option>
+                            <option value="Fingering">Fingering</option>
+                            <option value="Sport">Sport</option>
+                            <option value="DK">DK</option>
+                            <option value="Worsted">Worsted</option>
+                            <option value="Aran">Aran</option>
+                            <option value="Bulky">Bulky</option>
+                            <option value="Super Bulky">Super Bulky</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="colorway">Colorway Name</label>
+                        <input type="text" id="colorway" name="colorway" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="woolType">Wool Type</label>
+                        <select id="woolType" name="woolType" required>
+                            <option value="">Select wool type...</option>
+                            <option value="Wool">Wool</option>
+                            <option value="Wool Blend">Wool Blend</option>
+                            <option value="Acrylic">Acrylic</option>
+                            <option value="Cotton">Cotton</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <div class="quantity-group">
+                            <div>
+                                <label for="skeins">Skeins</label>
+                                <input type="number" id="skeins" name="skeins" min="1" required>
+                            </div>
+                            <div>
+                                <label for="weight_amount">Weight (g/oz)</label>
+                                <input type="number" id="weight_amount" name="weight_amount" min="1" required>
+                            </div>
+                            <div>
+                                <label for="length">Length (m/yds)</label>
+                                <input type="number" id="length" name="length" min="1" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="superwash" name="superwash">
+                            <label for="superwash">Superwash</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">Add to Stash</button>
+                </form>
+            </div>
+
+            <div class="stash-list">
+                <h2 class="stash-title">Your Yarn Stash</h2>
+                <input type="text" class="search-box" id="searchBox" placeholder="Search your stash...">
+                <div id="yarnList">
+                    <div class="empty-state">
+                        <h3>Your stash is empty</h3>
+                        <p>Add some yarn to get started!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constants for localStorage keys
+        const STORAGE_KEYS = {
+            YARN_STASH: 'stashTracker_yarnStash',
+            NEXT_ID: 'stashTracker_nextId'
+        };
+
+        // Store yarn data
+        let yarnStash = [];
+        let nextId = 1;
+
+        // Load data from localStorage
+        function loadData() {
+            try {
+                // Load yarn stash
+                const savedStash = localStorage.getItem(STORAGE_KEYS.YARN_STASH);
+                if (savedStash) {
+                    yarnStash = JSON.parse(savedStash);
+                    console.log('Loaded stash from localStorage:', yarnStash);
+                }
+
+                // Load next ID
+                const savedNextId = localStorage.getItem(STORAGE_KEYS.NEXT_ID);
+                if (savedNextId) {
+                    nextId = parseInt(savedNextId);
+                }
+
+                // Update data status
+                updateDataStatus();
+                displayYarn();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading data from localStorage:', error);
+                updateDataStatus('Error loading saved data');
+                // Continue with empty stash if localStorage is corrupted
+                yarnStash = [];
+                nextId = 1;
+                displayYarn();
+                updateStats();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            if (!isLocalStorageAvailable()) {
+                console.log('localStorage not available - data not saved');
+                return;
+            }
+            
+            try {
+                localStorage.setItem(STORAGE_KEYS.YARN_STASH, JSON.stringify(yarnStash));
+                localStorage.setItem(STORAGE_KEYS.NEXT_ID, nextId.toString());
+                console.log('Data saved to localStorage');
+                updateDataStatus();
+            } catch (error) {
+                console.error('Error saving data to localStorage:', error);
+                updateDataStatus('Error saving data');
+                
+                // Check if localStorage is full
+                if (error.name === 'QuotaExceededError') {
+                    alert('Storage is full! Please delete some yarns to free up space.');
+                }
+            }
+        }
+
+        // Update data status indicator
+        function updateDataStatus(errorMessage = null) {
+            const dataStatus = document.getElementById('dataStatus');
+            
+            if (errorMessage) {
+                dataStatus.textContent = errorMessage;
+                dataStatus.style.background = 'rgba(255, 71, 87, 0.2)';
+                return;
+            }
+
+            const stashCount = yarnStash.length;
+            if (stashCount === 0) {
+                dataStatus.textContent = 'Ready to add your first yarn!';
+                dataStatus.style.background = 'rgba(255,255,255,0.1)';
+            } else {
+                dataStatus.textContent = `Stash automatically saved (${stashCount} ${stashCount === 1 ? 'yarn' : 'yarns'})`;
+                dataStatus.style.background = 'rgba(46, 213, 115, 0.2)';
+            }
+        }
+
+        // Show success message
+        function showSuccessMessage() {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add yarn to stash
+        document.getElementById('yarnForm').addEventListener('submit', function(e) {
+            console.log('Form submitted!');
+            e.preventDefault();
+            
+            // Get form values directly
+            const brand = document.getElementById('brand').value.trim();
+            const weight = document.getElementById('weight').value;
+            const colorway = document.getElementById('colorway').value.trim();
+            const woolType = document.getElementById('woolType').value;
+            const skeins = document.getElementById('skeins').value;
+            const weight_amount = document.getElementById('weight_amount').value;
+            const length = document.getElementById('length').value;
+            const superwash = document.getElementById('superwash').checked;
+
+            console.log('Form values:', {brand, weight, colorway, woolType, skeins, weight_amount, length, superwash});
+
+            // Validate required fields
+            if (!brand || !weight || !colorway || !woolType || !skeins || !weight_amount || !length) {
+                console.log('Validation failed - missing required fields');
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const yarn = {
+                id: nextId++,
+                brand: brand,
+                weight: weight,
+                colorway: colorway,
+                woolType: woolType,
+                skeins: parseInt(skeins),
+                weight_amount: parseInt(weight_amount),
+                length: parseInt(length),
+                superwash: superwash,
+                dateAdded: new Date().toLocaleDateString()
+            };
+
+            console.log('Adding yarn:', yarn);
+            yarnStash.push(yarn);
+            console.log('Current stash:', yarnStash);
+            
+            saveData();
+            displayYarn();
+            updateStats();
+            showSuccessMessage();
+            e.target.reset();
+        });
+
+        // Display yarn in the list
+        function displayYarn(filteredYarn = null) {
+            const yarnList = document.getElementById('yarnList');
+            const yarnsToShow = filteredYarn || yarnStash;
+
+            if (yarnsToShow.length === 0) {
+                yarnList.innerHTML = `
+                    <div class="empty-state">
+                        <h3>${filteredYarn ? 'No yarns match your search' : 'Your stash is empty'}</h3>
+                        <p>${filteredYarn ? 'Try a different search term' : 'Add some yarn to get started!'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            yarnList.innerHTML = yarnsToShow.map(yarn => `
+                <div class="yarn-item">
+                    <div class="yarn-header">
+                        <div>
+                            <div class="yarn-brand">${yarn.brand}</div>
+                            <div class="yarn-colorway">${yarn.colorway}</div>
+                        </div>
+                    </div>
+                    <div class="yarn-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Weight</span>
+                            <div class="detail-value">${yarn.weight}</div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Type</span>
+                            <div class="detail-value">${yarn.woolType}</div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Skeins</span>
+                            <div class="detail-value">${yarn.skeins}</div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Weight</span>
+                            <div class="detail-value">${yarn.weight_amount}g/oz</div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Length</span>
+                            <div class="detail-value">${yarn.length}m/yds</div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Superwash</span>
+                            <div class="detail-value">${yarn.superwash ? 'Yes' : 'No'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Added</span>
+                            <div class="detail-value">${yarn.dateAdded}</div>
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteYarn(${yarn.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Delete yarn from stash
+        function deleteYarn(id) {
+            if (confirm('Are you sure you want to delete this yarn from your stash?')) {
+                yarnStash = yarnStash.filter(yarn => yarn.id !== id);
+                saveData();
+                displayYarn();
+                updateStats();
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('yarnCount').textContent = yarnStash.length;
+        }
+
+        // Search functionality
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            if (searchTerm === '') {
+                displayYarn();
+                return;
+            }
+
+            const filtered = yarnStash.filter(yarn => 
+                yarn.brand.toLowerCase().includes(searchTerm) ||
+                yarn.colorway.toLowerCase().includes(searchTerm) ||
+                yarn.weight.toLowerCase().includes(searchTerm) ||
+                yarn.woolType.toLowerCase().includes(searchTerm)
+            );
+
+            displayYarn(filtered);
+        });
+
+        // Check localStorage availability
+        function isLocalStorageAvailable() {
+            try {
+                // Check if localStorage exists
+                if (typeof Storage === 'undefined' || typeof localStorage === 'undefined') {
+                    return false;
+                }
+                
+                // Test if we can actually use it
+                const test = '__localStorage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (e) {
+                // This can happen in private browsing or if storage is disabled
+                console.log('localStorage test failed:', e.message);
+                return false;
+            }
+        }
+
+        // Initialize app
+        function initializeApp() {
+            if (isLocalStorageAvailable()) {
+                console.log('localStorage is available - data will persist');
+                loadData();
+            } else {
+                console.log('localStorage is not available - using session-only storage');
+                updateDataStatus('Data will not persist between sessions');
+                displayYarn();
+                updateStats();
+            }
+        }
+
+        // Start the application when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>
