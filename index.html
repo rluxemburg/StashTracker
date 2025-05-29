@@ -43,7 +43,7 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 1.2fr 1.8fr;
             gap: 30px;
             align-items: start;
         }
@@ -106,20 +106,21 @@
 
         .unit-input-group {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             align-items: stretch;
         }
 
         .unit-input-group input {
-            flex: 2;
+            flex: 3;
             margin: 0;
+            min-width: 0;
         }
 
         .unit-input-group select {
-            flex: 1;
+            flex: 2;
             margin: 0;
             font-size: 0.9rem;
-            min-width: 80px;
+            min-width: 85px;
         }
 
         .quantity-group label {
@@ -486,6 +487,11 @@
             margin-bottom: 15px;
             text-align: center;
             font-size: 0.9rem;
+            display: none;
+        }
+
+        .data-status.show {
+            display: block;
         }
 
         .success-message {
@@ -915,7 +921,7 @@
             try {
                 localStorage.setItem(STORAGE_KEYS.YARN_STASH, JSON.stringify(yarnStash));
                 localStorage.setItem(STORAGE_KEYS.NEXT_ID, nextId.toString());
-                updateDataStatus();
+                updateDataStatus(null, true); // Show temporary confirmation
             } catch (error) {
                 console.error('Error saving data:', error);
                 updateDataStatus('Error saving data');
@@ -927,22 +933,30 @@
         }
 
         // Update data status indicator
-        function updateDataStatus(errorMessage = null) {
+        function updateDataStatus(errorMessage = null, temporary = false) {
             const dataStatus = document.getElementById('dataStatus');
             
             if (errorMessage) {
                 dataStatus.textContent = errorMessage;
                 dataStatus.style.background = 'rgba(255, 71, 87, 0.2)';
+                dataStatus.classList.add('show');
                 return;
             }
 
             const stashCount = yarnStash.length;
-            if (stashCount === 0) {
-                dataStatus.textContent = 'Ready to add your first yarn!';
-                dataStatus.style.background = 'rgba(255,255,255,0.1)';
+            if (temporary && stashCount > 0) {
+                // Show temporary save confirmation
+                dataStatus.textContent = `Yarn added! Stash saved (${stashCount} ${stashCount === 1 ? 'yarn' : 'yarns'})`;
+                dataStatus.style.background = 'rgba(46, 213, 115, 0.3)';
+                dataStatus.classList.add('show');
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    dataStatus.classList.remove('show');
+                }, 3000);
             } else {
-                dataStatus.textContent = `Stash automatically saved (${stashCount} ${stashCount === 1 ? 'yarn' : 'yarns'})`;
-                dataStatus.style.background = 'rgba(46, 213, 115, 0.2)';
+                // Don't show persistent status on page load
+                dataStatus.classList.remove('show');
             }
         }
 
