@@ -113,15 +113,69 @@
             margin-bottom: 3px;
         }
 
-        .checkbox-group {
-            display: flex;
-            align-items: center;
+        .tags-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 10px;
+            margin-top: 10px;
         }
 
-        .checkbox-group input[type="checkbox"] {
+        .tag-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8f9ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            transition: background-color 0.2s ease;
+        }
+
+        .tag-item:hover {
+            background: #f0f2ff;
+        }
+
+        .tag-item input[type="checkbox"] {
             width: auto;
-            transform: scale(1.2);
+            transform: scale(1.1);
+        }
+
+        .tag-item label {
+            margin: 0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .rating-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 5px;
+            font-size: 1.5rem;
+        }
+
+        .star {
+            cursor: pointer;
+            opacity: 0.3;
+            transition: opacity 0.2s ease, transform 0.1s ease;
+            user-select: none;
+        }
+
+        .star:hover {
+            transform: scale(1.1);
+        }
+
+        .star.active {
+            opacity: 1;
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            color: #666;
         }
 
         .btn {
@@ -350,6 +404,16 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="color">Primary Color</label>
+                        <input type="text" id="color" name="color" placeholder="e.g., Blue, Red, Multicolor">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dyeLot">Dye Lot</label>
+                        <input type="text" id="dyeLot" name="dyeLot" placeholder="Optional - for matching skeins">
+                    </div>
+
+                    <div class="form-group">
                         <label for="woolType">Wool Type</label>
                         <select id="woolType" name="woolType" required>
                             <option value="">Select wool type...</option>
@@ -357,6 +421,12 @@
                             <option value="Wool Blend">Wool Blend</option>
                             <option value="Acrylic">Acrylic</option>
                             <option value="Cotton">Cotton</option>
+                            <option value="Alpaca">Alpaca</option>
+                            <option value="Silk">Silk</option>
+                            <option value="Linen">Linen</option>
+                            <option value="Bamboo">Bamboo</option>
+                            <option value="Cashmere">Cashmere</option>
+                            <option value="Mohair">Mohair</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
@@ -380,9 +450,59 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="superwash" name="superwash">
-                            <label for="superwash">Superwash</label>
+                        <label>Yarn Characteristics (select all that apply)</label>
+                        <div class="tags-group">
+                            <div class="tag-item">
+                                <input type="checkbox" id="handspun" name="handspun">
+                                <label for="handspun">Handspun</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="tweed" name="tweed">
+                                <label for="tweed">Tweed</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="tonal" name="tonal">
+                                <label for="tonal">Tonal</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="selfStriping" name="selfStriping">
+                                <label for="selfStriping">Self-striping</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="variegated" name="variegated">
+                                <label for="variegated">Variegated</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="gradient" name="gradient">
+                                <label for="gradient">Gradient</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="heathered" name="heathered">
+                                <label for="heathered">Heathered</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="marled" name="marled">
+                                <label for="marled">Marled</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="superwash" name="superwash">
+                                <label for="superwash">Superwash</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rating">Your Rating</label>
+                        <div class="rating-group">
+                            <div class="stars">
+                                <span class="star" data-rating="1">👍</span>
+                                <span class="star" data-rating="2">👍</span>
+                                <span class="star" data-rating="3">👍</span>
+                                <span class="star" data-rating="4">👍</span>
+                                <span class="star" data-rating="5">👍</span>
+                            </div>
+                            <span class="rating-text">Click to rate (1-5 thumbs up)</span>
+                            <input type="hidden" id="rating" name="rating" value="0">
                         </div>
                     </div>
 
@@ -448,20 +568,18 @@
         // Save data to localStorage
         function saveData() {
             if (!isLocalStorageAvailable()) {
-                console.log('localStorage not available - data not saved');
+                // In session-only mode, data is kept in memory but won't persist
                 return;
             }
             
             try {
                 localStorage.setItem(STORAGE_KEYS.YARN_STASH, JSON.stringify(yarnStash));
                 localStorage.setItem(STORAGE_KEYS.NEXT_ID, nextId.toString());
-                console.log('Data saved to localStorage');
                 updateDataStatus();
             } catch (error) {
-                console.error('Error saving data to localStorage:', error);
+                console.error('Error saving data:', error);
                 updateDataStatus('Error saving data');
                 
-                // Check if localStorage is full
                 if (error.name === 'QuotaExceededError') {
                     alert('Storage is full! Please delete some yarns to free up space.');
                 }
@@ -506,13 +624,24 @@
             const brand = document.getElementById('brand').value.trim();
             const weight = document.getElementById('weight').value;
             const colorway = document.getElementById('colorway').value.trim();
+            const color = document.getElementById('color').value.trim();
+            const dyeLot = document.getElementById('dyeLot').value.trim();
             const woolType = document.getElementById('woolType').value;
             const skeins = document.getElementById('skeins').value;
             const weight_amount = document.getElementById('weight_amount').value;
             const length = document.getElementById('length').value;
-            const superwash = document.getElementById('superwash').checked;
+            const rating = document.getElementById('rating').value;
 
-            console.log('Form values:', {brand, weight, colorway, woolType, skeins, weight_amount, length, superwash});
+            // Get all yarn characteristics
+            const characteristics = [];
+            const checkboxes = ['handspun', 'tweed', 'tonal', 'selfStriping', 'variegated', 'gradient', 'heathered', 'marled', 'superwash'];
+            checkboxes.forEach(id => {
+                if (document.getElementById(id).checked) {
+                    characteristics.push(id);
+                }
+            });
+
+            console.log('Form values:', {brand, weight, colorway, color, dyeLot, woolType, skeins, weight_amount, length, rating, characteristics});
 
             // Validate required fields
             if (!brand || !weight || !colorway || !woolType || !skeins || !weight_amount || !length) {
@@ -526,11 +655,14 @@
                 brand: brand,
                 weight: weight,
                 colorway: colorway,
+                color: color,
+                dyeLot: dyeLot,
                 woolType: woolType,
                 skeins: parseInt(skeins),
                 weight_amount: parseInt(weight_amount),
                 length: parseInt(length),
-                superwash: superwash,
+                rating: parseInt(rating),
+                characteristics: characteristics,
                 dateAdded: new Date().toLocaleDateString()
             };
 
@@ -543,6 +675,7 @@
             updateStats();
             showSuccessMessage();
             e.target.reset();
+            resetRating();
         });
 
         // Display yarn in the list
@@ -566,6 +699,8 @@
                         <div>
                             <div class="yarn-brand">${yarn.brand}</div>
                             <div class="yarn-colorway">${yarn.colorway}</div>
+                            ${yarn.color ? `<div style="font-size: 0.9rem; color: #888; margin-top: 2px;">Color: ${yarn.color}</div>` : ''}
+                            ${yarn.rating ? `<div style="margin-top: 5px;">${'👍'.repeat(yarn.rating)} <span style="color: #666; font-size: 0.9rem;">(${yarn.rating}/5)</span></div>` : ''}
                         </div>
                     </div>
                     <div class="yarn-details">
@@ -589,15 +724,27 @@
                             <span class="detail-label">Length</span>
                             <div class="detail-value">${yarn.length}m/yds</div>
                         </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Superwash</span>
-                            <div class="detail-value">${yarn.superwash ? 'Yes' : 'No'}</div>
-                        </div>
+                        ${yarn.dyeLot ? `<div class="detail-item">
+                            <span class="detail-label">Dye Lot</span>
+                            <div class="detail-value">${yarn.dyeLot}</div>
+                        </div>` : ''}
                         <div class="detail-item">
                             <span class="detail-label">Added</span>
                             <div class="detail-value">${yarn.dateAdded}</div>
                         </div>
                     </div>
+                    ${yarn.characteristics && yarn.characteristics.length > 0 ? `
+                        <div style="margin-top: 15px;">
+                            <div style="font-size: 0.8rem; color: #5a6acf; font-weight: 600; margin-bottom: 8px;">CHARACTERISTICS</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                ${yarn.characteristics.map(char => `
+                                    <span style="background: #5a6acf; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; text-transform: capitalize;">
+                                        ${char.replace(/([A-Z])/g, ' $1').toLowerCase()}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
                     <button class="delete-btn" onclick="deleteYarn(${yarn.id})">Delete</button>
                 </div>
             `).join('');
@@ -629,12 +776,58 @@
             const filtered = yarnStash.filter(yarn => 
                 yarn.brand.toLowerCase().includes(searchTerm) ||
                 yarn.colorway.toLowerCase().includes(searchTerm) ||
+                yarn.color.toLowerCase().includes(searchTerm) ||
                 yarn.weight.toLowerCase().includes(searchTerm) ||
-                yarn.woolType.toLowerCase().includes(searchTerm)
+                yarn.woolType.toLowerCase().includes(searchTerm) ||
+                yarn.dyeLot.toLowerCase().includes(searchTerm) ||
+                (yarn.characteristics && yarn.characteristics.some(char => 
+                    char.toLowerCase().includes(searchTerm)
+                ))
             );
 
             displayYarn(filtered);
         });
+
+        // Rating system functionality
+        function initializeRating() {
+            const stars = document.querySelectorAll('.star');
+            const ratingInput = document.getElementById('rating');
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', function() {
+                    const rating = index + 1;
+                    ratingInput.value = rating;
+                    updateStarDisplay(rating);
+                });
+                
+                star.addEventListener('mouseenter', function() {
+                    const rating = index + 1;
+                    updateStarDisplay(rating);
+                });
+            });
+            
+            // Reset on mouse leave
+            document.querySelector('.stars').addEventListener('mouseleave', function() {
+                const currentRating = parseInt(ratingInput.value) || 0;
+                updateStarDisplay(currentRating);
+            });
+        }
+
+        function updateStarDisplay(rating) {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function resetRating() {
+            document.getElementById('rating').value = '0';
+            updateStarDisplay(0);
+        }
 
         // Check localStorage availability
         function isLocalStorageAvailable() {
@@ -650,8 +843,8 @@
                 localStorage.removeItem(test);
                 return true;
             } catch (e) {
-                // This can happen in private browsing or if storage is disabled
-                console.log('localStorage test failed:', e.message);
+                // This can happen in sandboxed environments, private browsing, or if storage is disabled
+                // This is normal behavior in certain environments
                 return false;
             }
         }
@@ -659,11 +852,11 @@
         // Initialize app
         function initializeApp() {
             if (isLocalStorageAvailable()) {
-                console.log('localStorage is available - data will persist');
+                console.log('Data persistence enabled - your stash will be saved');
                 loadData();
             } else {
-                console.log('localStorage is not available - using session-only storage');
-                updateDataStatus('Data will not persist between sessions');
+                console.log('Running in session-only mode - data will reset when page refreshes');
+                updateDataStatus('Session-only mode - data resets on refresh');
                 displayYarn();
                 updateStats();
             }
@@ -671,9 +864,13 @@
 
         // Start the application when page loads
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeApp);
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeApp();
+                initializeRating();
+            });
         } else {
             initializeApp();
+            initializeRating();
         }
     </script>
 </body>
