@@ -711,6 +711,17 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status" required>
+                            <option value="">Select status...</option>
+                            <option value="Available">Available</option>
+                            <option value="Reserved">Reserved</option>
+                            <option value="In Use">In Use</option>
+                            <option value="Used Up">Used Up</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label for="yarnPhoto">Yarn Photo (optional)</label>
                         <div class="photo-upload-container">
                             <input type="file" id="yarnPhoto" name="yarnPhoto" accept="image/*" style="display: none;">
@@ -989,6 +1000,7 @@
             const length = document.getElementById('length').value;
             const length_unit = document.getElementById('length_unit').value;
             const rating = document.getElementById('rating').value;
+            const status = document.getElementById('status').value;
 
             // Get all yarn characteristics
             const characteristics = [];
@@ -999,10 +1011,10 @@
                 }
             });
 
-            console.log('Form values:', {brand, weight, colorway, color, dyeLot, woolType, skeins, weight_amount, weight_unit, length, length_unit, rating, characteristics});
+            console.log('Form values:', {brand, weight, colorway, color, dyeLot, woolType, skeins, weight_amount, weight_unit, length, length_unit, rating, status, characteristics});
 
             // Validate required fields
-            if (!brand || !weight || !colorway || !woolType || !skeins || !weight_amount || !weight_unit || !length || !length_unit) {
+            if (!brand || !weight || !colorway || !woolType || !skeins || !weight_amount || !weight_unit || !length || !length_unit || !status) {
                 console.log('Validation failed - missing required fields');
                 alert('Please fill in all required fields');
                 return;
@@ -1022,6 +1034,7 @@
                 length: parseInt(length),
                 length_unit: length_unit,
                 rating: parseInt(rating),
+                status: status,
                 characteristics: characteristics,
                 photo: currentPhotoData,
                 dateAdded: new Date().toLocaleDateString()
@@ -1096,6 +1109,10 @@
                                 <span class="detail-label">Length</span>
                                 <div class="detail-value">${yarn.length} ${yarn.length_unit || 'm'}</div>
                             </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status</span>
+                                <div class="detail-value">${yarn.status}</div>
+                            </div>
                             ${yarn.dyeLot ? `<div class="detail-item">
                                 <span class="detail-label">Dye Lot</span>
                                 <div class="detail-value">${yarn.dyeLot}</div>
@@ -1152,6 +1169,7 @@
                 yarn.color.toLowerCase().includes(searchTerm) ||
                 yarn.weight.toLowerCase().includes(searchTerm) ||
                 yarn.woolType.toLowerCase().includes(searchTerm) ||
+                yarn.status.toLowerCase().includes(searchTerm) ||
                 yarn.dyeLot.toLowerCase().includes(searchTerm) ||
                 (yarn.characteristics && yarn.characteristics.some(char => 
                     char.toLowerCase().includes(searchTerm)
