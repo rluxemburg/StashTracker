@@ -1102,6 +1102,7 @@
         // Global variables for photo handling
         let currentPhotoData = null;
         let currentEditPhotoData = null;
+        let editPhotoInitialized = false;
 
         // Compress image to reduce file size
         function compressImage(file, maxWidth = 800, quality = 0.8) {
@@ -1137,7 +1138,86 @@
         }
 
         function initializeEditPhotoUpload() {
-            setupPhotoUpload('editYarnPhoto', 'editPhotoUploadArea', 'editUploadPlaceholder', 'editPhotoPreview', 'editPreviewImage', 'editRemovePhotoBtn', 'editPhoto');
+            if (editPhotoInitialized) return; // Prevent duplicate initialization
+            
+            const photoInput = document.getElementById('editYarnPhoto');
+            const uploadArea = document.getElementById('editPhotoUploadArea');
+            const placeholder = document.getElementById('editUploadPlaceholder');
+            const preview = document.getElementById('editPhotoPreview');
+            const previewImg = document.getElementById('editPreviewImage');
+            const removeBtn = document.getElementById('editRemovePhotoBtn');
+
+            if (!photoInput || !uploadArea) return; // Elements don't exist yet
+
+            // Click to upload
+            uploadArea.addEventListener('click', () => {
+                photoInput.click();
+            });
+
+            // File selection
+            photoInput.addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    await handleEditFile(file);
+                }
+            });
+
+            // Drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    await handleEditFile(files[0]);
+                }
+            });
+
+            // Remove photo
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                clearEditPhoto();
+            });
+
+            async function handleEditFile(file) {
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+
+                // Compress image
+                try {
+                    const compressedImage = await compressImage(file);
+                    currentEditPhotoData = compressedImage;
+                    
+                    // Show preview
+                    previewImg.src = compressedImage;
+                    placeholder.style.display = 'none';
+                    preview.style.display = 'block';
+                } catch (error) {
+                    console.error('Error processing image:', error);
+                    alert('Error processing image. Please try again.');
+                }
+            }
+
+            function clearEditPhoto() {
+                currentEditPhotoData = null;
+                photoInput.value = '';
+                placeholder.style.display = 'flex';
+                preview.style.display = 'none';
+                previewImg.src = '';
+            }
+
+            editPhotoInitialized = true;
         }
 
         function setupPhotoUpload(inputId, uploadAreaId, placeholderId, previewId, previewImgId, removeBtnId, photoType) {
@@ -1621,6 +1701,11 @@
 
             // Show modal
             document.getElementById('editModal').classList.add('show');
+            
+            // Initialize edit photo upload after modal is shown
+            setTimeout(() => {
+                initializeEditPhotoUpload();
+            }, 100);
         }
 
         function closeEditModal() {
@@ -1787,14 +1872,14 @@
                 initializeRating();
                 initializeEditRating();
                 initializePhotoUpload();
-                initializeEditPhotoUpload();
+                // Don't initialize edit photo upload here - it's done when modal opens
             });
         } else {
             initializeApp();
             initializeRating();
             initializeEditRating();
             initializePhotoUpload();
-            initializeEditPhotoUpload();
+            // Don't initialize edit photo upload here - it's done when modal opens
         }
     </script>
 </body>
