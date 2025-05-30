@@ -1008,6 +1008,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="editYarnPhoto">Yarn Photo (optional)</label>
+                    <div class="photo-upload-container">
+                        <input type="file" id="editYarnPhoto" name="editYarnPhoto" accept="image/*" style="display: none;">
+                        <div class="photo-upload-area" id="editPhotoUploadArea">
+                            <div class="upload-placeholder" id="editUploadPlaceholder">
+                                <div class="upload-icon">📷</div>
+                                <div class="upload-text">Click to add photo</div>
+                                <div class="upload-subtext">JPG, PNG, or HEIC</div>
+                            </div>
+                            <div class="photo-preview" id="editPhotoPreview" style="display: none;">
+                                <img id="editPreviewImage" src="" alt="Yarn preview">
+                                <button type="button" class="remove-photo-btn" id="editRemovePhotoBtn">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label>Yarn Characteristics (select all that apply)</label>
                     <div class="tags-group">
                         <div class="tag-item">
