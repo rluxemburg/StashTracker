@@ -603,6 +603,24 @@
                 </div>
                 <form id="yarnForm">
                     <div class="form-group">
+                    <label for="editYarnPhoto">Yarn Photo (optional)</label>
+                    <div class="photo-upload-container">
+                        <input type="file" id="editYarnPhoto" name="editYarnPhoto" accept="image/*" style="display: none;">
+                        <div class="photo-upload-area" id="editPhotoUploadArea">
+                            <div class="upload-placeholder" id="editUploadPlaceholder">
+                                <div class="upload-icon">📷</div>
+                                <div class="upload-text">Click to add photo</div>
+                                <div class="upload-subtext">JPG, PNG, or HEIC</div>
+                            </div>
+                            <div class="photo-preview" id="editPhotoPreview" style="display: none;">
+                                <img id="editPreviewImage" src="" alt="Yarn preview">
+                                <button type="button" class="remove-photo-btn" id="editRemovePhotoBtn">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                         <label for="brand">Yarn Brand</label>
                         <input type="text" id="brand" name="brand" required>
                     </div>
@@ -1065,6 +1083,7 @@
     <script>
         // Global variables for photo handling
         let currentPhotoData = null;
+        let currentEditPhotoData = null;
 
         // Compress image to reduce file size
         function compressImage(file, maxWidth = 800, quality = 0.8) {
@@ -1096,12 +1115,20 @@
 
         // Handle photo upload
         function initializePhotoUpload() {
-            const photoInput = document.getElementById('yarnPhoto');
-            const uploadArea = document.getElementById('photoUploadArea');
-            const placeholder = document.getElementById('uploadPlaceholder');
-            const preview = document.getElementById('photoPreview');
-            const previewImg = document.getElementById('previewImage');
-            const removeBtn = document.getElementById('removePhotoBtn');
+            setupPhotoUpload('yarnPhoto', 'photoUploadArea', 'uploadPlaceholder', 'photoPreview', 'previewImage', 'removePhotoBtn', 'currentPhoto');
+        }
+
+        function initializeEditPhotoUpload() {
+            setupPhotoUpload('editYarnPhoto', 'editPhotoUploadArea', 'editUploadPlaceholder', 'editPhotoPreview', 'editPreviewImage', 'editRemovePhotoBtn', 'editPhoto');
+        }
+
+        function setupPhotoUpload(inputId, uploadAreaId, placeholderId, previewId, previewImgId, removeBtnId, photoType) {
+            const photoInput = document.getElementById(inputId);
+            const uploadArea = document.getElementById(uploadAreaId);
+            const placeholder = document.getElementById(placeholderId);
+            const preview = document.getElementById(previewId);
+            const previewImg = document.getElementById(previewImgId);
+            const removeBtn = document.getElementById(removeBtnId);
 
             // Click to upload
             uploadArea.addEventListener('click', () => {
@@ -1153,7 +1180,12 @@
                 // Compress image
                 try {
                     const compressedImage = await compressImage(file);
-                    currentPhotoData = compressedImage;
+                    
+                    if (photoType === 'currentPhoto') {
+                        currentPhotoData = compressedImage;
+                    } else {
+                        currentEditPhotoData = compressedImage;
+                    }
                     
                     // Show preview
                     previewImg.src = compressedImage;
@@ -1166,7 +1198,12 @@
             }
 
             function clearPhoto() {
-                currentPhotoData = null;
+                if (photoType === 'currentPhoto') {
+                    currentPhotoData = null;
+                } else {
+                    currentEditPhotoData = null;
+                }
+                
                 photoInput.value = '';
                 placeholder.style.display = 'flex';
                 preview.style.display = 'none';
@@ -1548,12 +1585,30 @@
             // Update rating display
             updateEditStarDisplay(yarn.rating || 0);
 
+            // Set up edit photo
+            currentEditPhotoData = yarn.photo || null;
+            const editPlaceholder = document.getElementById('editUploadPlaceholder');
+            const editPreview = document.getElementById('editPhotoPreview');
+            const editPreviewImg = document.getElementById('editPreviewImage');
+            
+            if (yarn.photo) {
+                editPreviewImg.src = yarn.photo;
+                editPlaceholder.style.display = 'none';
+                editPreview.style.display = 'block';
+            } else {
+                editPlaceholder.style.display = 'flex';
+                editPreview.style.display = 'none';
+                editPreviewImg.src = '';
+            }
+
             // Show modal
             document.getElementById('editModal').classList.add('show');
         }
 
         function closeEditModal() {
             document.getElementById('editModal').classList.remove('show');
+            // Reset edit photo data
+            currentEditPhotoData = null;
         }
 
         // Edit form submission
@@ -1599,7 +1654,7 @@
 
             // Update the yarn object
             yarnStash[yarnIndex] = {
-                ...yarnStash[yarnIndex], // Keep existing data like id, photo, dateAdded
+                ...yarnStash[yarnIndex], // Keep existing data like id, dateAdded
                 brand: brand,
                 weight: weight,
                 colorway: colorway,
@@ -1613,7 +1668,8 @@
                 length_unit: length_unit,
                 rating: parseInt(rating),
                 status: status,
-                characteristics: characteristics
+                characteristics: characteristics,
+                photo: currentEditPhotoData // Update photo (could be new, existing, or null)
             };
 
             saveData();
@@ -1713,12 +1769,14 @@
                 initializeRating();
                 initializeEditRating();
                 initializePhotoUpload();
+                initializeEditPhotoUpload();
             });
         } else {
             initializeApp();
             initializeRating();
             initializeEditRating();
             initializePhotoUpload();
+            initializeEditPhotoUpload();
         }
     </script>
 </body>
