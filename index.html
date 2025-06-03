@@ -1132,9 +1132,93 @@
             });
         }
 
-        // Handle photo upload
+        // Handle photo upload - Main form
         function initializePhotoUpload() {
-            setupPhotoUpload('yarnPhoto', 'photoUploadArea', 'uploadPlaceholder', 'photoPreview', 'previewImage', 'removePhotoBtn', 'currentPhoto');
+            const photoInput = document.getElementById('yarnPhoto');
+            const uploadArea = document.getElementById('photoUploadArea');
+            const placeholder = document.getElementById('uploadPlaceholder');
+            const preview = document.getElementById('photoPreview');
+            const previewImg = document.getElementById('previewImage');
+            const removeBtn = document.getElementById('removePhotoBtn');
+
+            console.log('Initializing main photo upload...', {photoInput, uploadArea});
+
+            if (!photoInput || !uploadArea) {
+                console.error('Photo upload elements not found!');
+                return;
+            }
+
+            // Click to upload
+            uploadArea.addEventListener('click', function(e) {
+                console.log('Upload area clicked!');
+                e.preventDefault();
+                photoInput.click();
+            });
+
+            // File selection
+            photoInput.addEventListener('change', async function(e) {
+                console.log('File selected:', e.target.files[0]);
+                const file = e.target.files[0];
+                if (file) {
+                    await handleMainFile(file);
+                }
+            });
+
+            // Drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    await handleMainFile(files[0]);
+                }
+            });
+
+            // Remove photo
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                clearMainPhoto();
+            });
+
+            async function handleMainFile(file) {
+                console.log('Processing main file:', file);
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+
+                // Compress image
+                try {
+                    const compressedImage = await compressImage(file);
+                    currentPhotoData = compressedImage;
+                    
+                    // Show preview
+                    previewImg.src = compressedImage;
+                    placeholder.style.display = 'none';
+                    preview.style.display = 'block';
+                } catch (error) {
+                    console.error('Error processing image:', error);
+                    alert('Error processing image. Please try again.');
+                }
+            }
+
+            function clearMainPhoto() {
+                currentPhotoData = null;
+                photoInput.value = '';
+                placeholder.style.display = 'flex';
+                preview.style.display = 'none';
+                previewImg.src = '';
+            }
         }
 
         function initializeEditPhotoUpload() {
@@ -1147,15 +1231,23 @@
             const previewImg = document.getElementById('editPreviewImage');
             const removeBtn = document.getElementById('editRemovePhotoBtn');
 
-            if (!photoInput || !uploadArea) return; // Elements don't exist yet
+            console.log('Initializing edit photo upload...', {photoInput, uploadArea});
+
+            if (!photoInput || !uploadArea) {
+                console.error('Edit photo upload elements not found!');
+                return; 
+            }
 
             // Click to upload
-            uploadArea.addEventListener('click', () => {
+            uploadArea.addEventListener('click', function(e) {
+                console.log('Edit upload area clicked!');
+                e.preventDefault();
                 photoInput.click();
             });
 
             // File selection
             photoInput.addEventListener('change', async function(e) {
+                console.log('Edit file selected:', e.target.files[0]);
                 const file = e.target.files[0];
                 if (file) {
                     await handleEditFile(file);
@@ -1188,6 +1280,7 @@
             });
 
             async function handleEditFile(file) {
+                console.log('Processing edit file:', file);
                 // Validate file type
                 if (!file.type.startsWith('image/')) {
                     alert('Please select an image file');
@@ -1221,92 +1314,7 @@
         }
 
         function setupPhotoUpload(inputId, uploadAreaId, placeholderId, previewId, previewImgId, removeBtnId, photoType) {
-            const photoInput = document.getElementById(inputId);
-            const uploadArea = document.getElementById(uploadAreaId);
-            const placeholder = document.getElementById(placeholderId);
-            const preview = document.getElementById(previewId);
-            const previewImg = document.getElementById(previewImgId);
-            const removeBtn = document.getElementById(removeBtnId);
-
-            // Click to upload
-            uploadArea.addEventListener('click', () => {
-                photoInput.click();
-            });
-
-            // File selection
-            photoInput.addEventListener('change', handleFileSelect);
-
-            // Drag and drop
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    handleFile(files[0]);
-                }
-            });
-
-            // Remove photo
-            removeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                clearPhoto();
-            });
-
-            async function handleFileSelect(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    await handleFile(file);
-                }
-            }
-
-            async function handleFile(file) {
-                // Validate file type
-                if (!file.type.startsWith('image/')) {
-                    alert('Please select an image file');
-                    return;
-                }
-
-                // Compress image
-                try {
-                    const compressedImage = await compressImage(file);
-                    
-                    if (photoType === 'currentPhoto') {
-                        currentPhotoData = compressedImage;
-                    } else {
-                        currentEditPhotoData = compressedImage;
-                    }
-                    
-                    // Show preview
-                    previewImg.src = compressedImage;
-                    placeholder.style.display = 'none';
-                    preview.style.display = 'block';
-                } catch (error) {
-                    console.error('Error processing image:', error);
-                    alert('Error processing image. Please try again.');
-                }
-            }
-
-            function clearPhoto() {
-                if (photoType === 'currentPhoto') {
-                    currentPhotoData = null;
-                } else {
-                    currentEditPhotoData = null;
-                }
-                
-                photoInput.value = '';
-                placeholder.style.display = 'flex';
-                preview.style.display = 'none';
-                previewImg.src = '';
-            }
+            // This function is no longer used - keeping for reference
         }
 
         // Constants for localStorage keys
@@ -1702,10 +1710,8 @@
             // Show modal
             document.getElementById('editModal').classList.add('show');
             
-            // Initialize edit photo upload after modal is shown
-            setTimeout(() => {
-                initializeEditPhotoUpload();
-            }, 100);
+            // Initialize edit photo upload functionality
+            initializeEditPhotoUpload();
         }
 
         function closeEditModal() {
