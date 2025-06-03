@@ -612,7 +612,7 @@
                     <label for="editYarnPhoto">Yarn Photo (optional)</label>
                     <div class="photo-upload-container">
                         <input type="file" id="editYarnPhoto" name="editYarnPhoto" accept="image/*" style="display: none;">
-                        <div class="photo-upload-area" id="editPhotoUploadArea">
+                        <div class="photo-upload-area" id="editPhotoUploadArea" onclick="document.getElementById('editYarnPhoto').click()">
                             <div class="upload-placeholder" id="editUploadPlaceholder">
                                 <div class="upload-icon">📷</div>
                                 <div class="upload-text">Click to add photo</div>
@@ -620,7 +620,7 @@
                             </div>
                             <div class="photo-preview" id="editPhotoPreview" style="display: none;">
                                 <img id="editPreviewImage" src="" alt="Yarn preview">
-                                <button type="button" class="remove-photo-btn" id="editRemovePhotoBtn">×</button>
+                                <button type="button" class="remove-photo-btn" id="editRemovePhotoBtn" onclick="event.stopPropagation(); clearEditPhoto()">×</button>
                             </div>
                         </div>
                     </div>
@@ -1229,68 +1229,21 @@
 
         function initializeEditPhotoUpload() {
             const photoInput = document.getElementById('editYarnPhoto');
-            const uploadArea = document.getElementById('editPhotoUploadArea');
-            const placeholder = document.getElementById('editUploadPlaceholder');
-            const preview = document.getElementById('editPhotoPreview');
-            const previewImg = document.getElementById('editPreviewImage');
-            const removeBtn = document.getElementById('editRemovePhotoBtn');
 
-            console.log('Initializing edit photo upload...', {photoInput, uploadArea});
+            console.log('Setting up edit photo file handler...');
 
-            if (!photoInput || !uploadArea) {
-                console.error('Edit photo upload elements not found!');
+            if (!photoInput) {
+                console.error('Edit photo input not found!');
                 return; 
             }
 
-            // Remove any existing event listeners first
-            const newUploadArea = uploadArea.cloneNode(true);
-            uploadArea.parentNode.replaceChild(newUploadArea, uploadArea);
-            
-            // Get the new elements after cloning
-            const freshUploadArea = document.getElementById('editPhotoUploadArea');
-            const freshPhotoInput = document.getElementById('editYarnPhoto');
-            const freshRemoveBtn = document.getElementById('editRemovePhotoBtn');
-
-            // Click to upload
-            freshUploadArea.addEventListener('click', function(e) {
-                console.log('Edit upload area clicked!');
-                e.preventDefault();
-                e.stopPropagation();
-                freshPhotoInput.click();
-            });
-
-            // File selection
-            freshPhotoInput.addEventListener('change', async function(e) {
+            // File selection handler
+            photoInput.addEventListener('change', async function(e) {
                 console.log('Edit file selected:', e.target.files[0]);
                 const file = e.target.files[0];
                 if (file) {
                     await handleEditFile(file);
                 }
-            });
-
-            // Drag and drop
-            freshUploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                freshUploadArea.classList.add('dragover');
-            });
-
-            freshUploadArea.addEventListener('dragleave', () => {
-                freshUploadArea.classList.remove('dragover');
-            });
-
-            freshUploadArea.addEventListener('drop', async (e) => {
-                e.preventDefault();
-                freshUploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    await handleEditFile(files[0]);
-                }
-            });
-
-            // Remove photo
-            freshRemoveBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                clearEditPhoto();
             });
 
             async function handleEditFile(file) {
@@ -1319,19 +1272,20 @@
                     alert('Error processing image. Please try again.');
                 }
             }
+        }
 
-            function clearEditPhoto() {
-                currentEditPhotoData = null;
-                const photoInput = document.getElementById('editYarnPhoto');
-                const placeholder = document.getElementById('editUploadPlaceholder');
-                const preview = document.getElementById('editPhotoPreview');
-                const previewImg = document.getElementById('editPreviewImage');
-                
-                photoInput.value = '';
-                placeholder.style.display = 'flex';
-                preview.style.display = 'none';
-                previewImg.src = '';
-            }
+        // Global function for clearing edit photo (called from HTML onclick)
+        function clearEditPhoto() {
+            currentEditPhotoData = null;
+            const photoInput = document.getElementById('editYarnPhoto');
+            const placeholder = document.getElementById('editUploadPlaceholder');
+            const preview = document.getElementById('editPhotoPreview');
+            const previewImg = document.getElementById('editPreviewImage');
+            
+            if (photoInput) photoInput.value = '';
+            if (placeholder) placeholder.style.display = 'flex';
+            if (preview) preview.style.display = 'none';
+            if (previewImg) previewImg.src = '';
         }
 
         function setupPhotoUpload(inputId, uploadAreaId, placeholderId, previewId, previewImgId, removeBtnId, photoType) {
