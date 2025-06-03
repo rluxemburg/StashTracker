@@ -1228,8 +1228,6 @@
         }
 
         function initializeEditPhotoUpload() {
-            if (editPhotoInitialized) return; // Prevent duplicate initialization
-            
             const photoInput = document.getElementById('editYarnPhoto');
             const uploadArea = document.getElementById('editPhotoUploadArea');
             const placeholder = document.getElementById('editUploadPlaceholder');
@@ -1244,15 +1242,25 @@
                 return; 
             }
 
+            // Remove any existing event listeners first
+            const newUploadArea = uploadArea.cloneNode(true);
+            uploadArea.parentNode.replaceChild(newUploadArea, uploadArea);
+            
+            // Get the new elements after cloning
+            const freshUploadArea = document.getElementById('editPhotoUploadArea');
+            const freshPhotoInput = document.getElementById('editYarnPhoto');
+            const freshRemoveBtn = document.getElementById('editRemovePhotoBtn');
+
             // Click to upload
-            uploadArea.addEventListener('click', function(e) {
+            freshUploadArea.addEventListener('click', function(e) {
                 console.log('Edit upload area clicked!');
                 e.preventDefault();
-                photoInput.click();
+                e.stopPropagation();
+                freshPhotoInput.click();
             });
 
             // File selection
-            photoInput.addEventListener('change', async function(e) {
+            freshPhotoInput.addEventListener('change', async function(e) {
                 console.log('Edit file selected:', e.target.files[0]);
                 const file = e.target.files[0];
                 if (file) {
@@ -1261,18 +1269,18 @@
             });
 
             // Drag and drop
-            uploadArea.addEventListener('dragover', (e) => {
+            freshUploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                uploadArea.classList.add('dragover');
+                freshUploadArea.classList.add('dragover');
             });
 
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
+            freshUploadArea.addEventListener('dragleave', () => {
+                freshUploadArea.classList.remove('dragover');
             });
 
-            uploadArea.addEventListener('drop', async (e) => {
+            freshUploadArea.addEventListener('drop', async (e) => {
                 e.preventDefault();
-                uploadArea.classList.remove('dragover');
+                freshUploadArea.classList.remove('dragover');
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
                     await handleEditFile(files[0]);
@@ -1280,7 +1288,7 @@
             });
 
             // Remove photo
-            removeBtn.addEventListener('click', (e) => {
+            freshRemoveBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 clearEditPhoto();
             });
@@ -1299,6 +1307,10 @@
                     currentEditPhotoData = compressedImage;
                     
                     // Show preview
+                    const previewImg = document.getElementById('editPreviewImage');
+                    const placeholder = document.getElementById('editUploadPlaceholder');
+                    const preview = document.getElementById('editPhotoPreview');
+                    
                     previewImg.src = compressedImage;
                     placeholder.style.display = 'none';
                     preview.style.display = 'block';
@@ -1310,13 +1322,16 @@
 
             function clearEditPhoto() {
                 currentEditPhotoData = null;
+                const photoInput = document.getElementById('editYarnPhoto');
+                const placeholder = document.getElementById('editUploadPlaceholder');
+                const preview = document.getElementById('editPhotoPreview');
+                const previewImg = document.getElementById('editPreviewImage');
+                
                 photoInput.value = '';
                 placeholder.style.display = 'flex';
                 preview.style.display = 'none';
                 previewImg.src = '';
             }
-
-            editPhotoInitialized = true;
         }
 
         function setupPhotoUpload(inputId, uploadAreaId, placeholderId, previewId, previewImgId, removeBtnId, photoType) {
