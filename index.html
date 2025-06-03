@@ -612,7 +612,7 @@
                     <label for="editYarnPhoto">Yarn Photo (optional)</label>
                     <div class="photo-upload-container">
                         <input type="file" id="editYarnPhoto" name="editYarnPhoto" accept="image/*" style="display: none;">
-                        <div class="photo-upload-area" id="editPhotoUploadArea" onclick="document.getElementById('editYarnPhoto').click()">
+                        <div class="photo-upload-area" id="editPhotoUploadArea" onclick="console.log('Onclick fired!'); document.getElementById('editYarnPhoto').click();">
                             <div class="upload-placeholder" id="editUploadPlaceholder">
                                 <div class="upload-icon">📷</div>
                                 <div class="upload-text">Click to add photo</div>
