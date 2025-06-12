@@ -206,7 +206,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1;
         }
 
         .photo-upload-area:hover {
@@ -224,26 +223,21 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            pointer-events: none;
-            z-index: 2;
         }
 
         .upload-icon {
             font-size: 2rem;
             opacity: 0.6;
-            pointer-events: none;
         }
 
         .upload-text {
             font-weight: 600;
             color: #6B46C1;
-            pointer-events: none;
         }
 
         .upload-subtext {
             font-size: 0.8rem;
             color: #666;
-            pointer-events: none;
         }
 
         .photo-preview {
@@ -282,7 +276,6 @@
             background: #ff3742;
         }
 
-        /* Edit Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -468,7 +461,7 @@
 
         .yarn-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: between;
             align-items: flex-start;
             margin-bottom: 10px;
         }
@@ -743,6 +736,24 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="yarnPhoto">Yarn Photo (optional)</label>
+                        <div class="photo-upload-container">
+                            <input type="file" id="yarnPhoto" name="yarnPhoto" accept="image/*" style="display: none;">
+                            <div class="photo-upload-area" id="photoUploadArea">
+                                <div class="upload-placeholder" id="uploadPlaceholder">
+                                    <div class="upload-icon">📷</div>
+                                    <div class="upload-text">Click to add photo</div>
+                                    <div class="upload-subtext">JPG, PNG, or HEIC</div>
+                                </div>
+                                <div class="photo-preview" id="photoPreview" style="display: none;">
+                                    <img id="previewImage" src="" alt="Yarn preview">
+                                    <button type="button" class="remove-photo-btn" id="removePhotoBtn">×</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label>Yarn Characteristics (select all that apply)</label>
                         <div class="tags-group">
                             <div class="tag-item">
@@ -796,27 +807,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="yarnPhoto">Yarn Photo (optional)</label>
-                        <div class="photo-upload-container">
-                            <input type="file" id="yarnPhoto" name="yarnPhoto" accept="image/*" style="display: none;">
-                            <div class="photo-upload-area" id="photoUploadArea">
-                                <div class="upload-placeholder" id="uploadPlaceholder">
-                                    <div class="upload-icon">📷</div>
-                                    <div class="upload-text">Click to add photo</div>
-                                    <div class="upload-subtext">JPG, PNG, or HEIC</div>
-                                </div>
-                                <div class="photo-preview" id="photoPreview" style="display: none;">
-                                    <img id="previewImage" src="" alt="Yarn preview">
-                                    <button type="button" class="remove-photo-btn" id="removePhotoBtn">×</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         <label for="rating">Your Rating</label>
                         <div class="rating-group">
-                            <div class="stars">
+                            <div class="stars" id="stars">
                                 <span class="star" data-rating="1">👍</span>
                                 <span class="star" data-rating="2">👍</span>
                                 <span class="star" data-rating="3">👍</span>
@@ -1098,13 +1091,7 @@
         let currentPhotoData = null;
         let currentEditPhotoData = null;
 
-        // Constants for localStorage keys
-        const STORAGE_KEYS = {
-            YARN_STASH: 'stashTracker_yarnStash',
-            NEXT_ID: 'stashTracker_nextId'
-        };
-
-        // Store yarn data
+        // Constants for storage keys (using variables instead of localStorage for Claude.ai compatibility)
         let yarnStash = [];
         let nextId = 1;
 
@@ -1273,50 +1260,6 @@
             if (previewImg) previewImg.src = '';
         }
 
-        // Load data from localStorage
-        function loadData() {
-            try {
-                const savedStash = localStorage.getItem(STORAGE_KEYS.YARN_STASH);
-                if (savedStash) {
-                    yarnStash = JSON.parse(savedStash);
-                }
-
-                const savedNextId = localStorage.getItem(STORAGE_KEYS.NEXT_ID);
-                if (savedNextId) {
-                    nextId = parseInt(savedNextId);
-                }
-
-                updateDataStatus();
-                displayYarn();
-                updateStats();
-            } catch (error) {
-                console.error('Error loading data:', error);
-                updateDataStatus('Error loading saved data');
-                yarnStash = [];
-                nextId = 1;
-                displayYarn();
-                updateStats();
-            }
-        }
-
-        // Save data to localStorage
-        function saveData() {
-            if (!isLocalStorageAvailable()) return;
-            
-            try {
-                localStorage.setItem(STORAGE_KEYS.YARN_STASH, JSON.stringify(yarnStash));
-                localStorage.setItem(STORAGE_KEYS.NEXT_ID, nextId.toString());
-                updateDataStatus(null, true);
-            } catch (error) {
-                console.error('Error saving data:', error);
-                updateDataStatus('Error saving data');
-                
-                if (error.name === 'QuotaExceededError') {
-                    alert('Storage is full! Please delete some yarns to free up space.');
-                }
-            }
-        }
-
         function updateDataStatus(errorMessage = null, temporary = false) {
             const dataStatus = document.getElementById('dataStatus');
             
@@ -1329,7 +1272,7 @@
 
             const stashCount = yarnStash.length;
             if (temporary && stashCount > 0) {
-                dataStatus.textContent = `Yarn added! Stash saved (${stashCount} ${stashCount === 1 ? 'yarn' : 'yarns'})`;
+                dataStatus.textContent = `Yarn added! (${stashCount} ${stashCount === 1 ? 'yarn' : 'yarns'} in stash)`;
                 dataStatus.style.background = 'rgba(46, 213, 115, 0.3)';
                 dataStatus.classList.add('show');
                 
@@ -1404,10 +1347,10 @@
 
             yarnStash.push(yarn);
             
-            saveData();
             displayYarn();
             updateStats();
             showSuccessMessage();
+            updateDataStatus(null, true);
             e.target.reset();
             resetRating();
             clearPhotoUpload();
@@ -1511,7 +1454,6 @@
         function deleteYarn(id) {
             if (confirm('Are you sure you want to delete this yarn from your stash?')) {
                 yarnStash = yarnStash.filter(yarn => yarn.id !== id);
-                saveData();
                 displayYarn();
                 updateStats();
             }
@@ -1521,32 +1463,39 @@
             document.getElementById('yarnCount').textContent = yarnStash.length;
         }
 
-        document.getElementById('searchBox').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            if (searchTerm === '') {
-                displayYarn();
-                return;
-            }
+        // Search functionality
+        const searchBox = document.getElementById('searchBox');
+        if (searchBox) {
+            searchBox.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchTerm === '') {
+                    displayYarn();
+                    return;
+                }
 
-            const filtered = yarnStash.filter(yarn => 
-                yarn.brand.toLowerCase().includes(searchTerm) ||
-                yarn.colorway.toLowerCase().includes(searchTerm) ||
-                yarn.color.toLowerCase().includes(searchTerm) ||
-                yarn.weight.toLowerCase().includes(searchTerm) ||
-                yarn.woolType.toLowerCase().includes(searchTerm) ||
-                yarn.status.toLowerCase().includes(searchTerm) ||
-                yarn.dyeLot.toLowerCase().includes(searchTerm) ||
-                (yarn.characteristics && yarn.characteristics.some(char => 
-                    char.toLowerCase().includes(searchTerm)
-                ))
-            );
+                const filtered = yarnStash.filter(yarn => 
+                    yarn.brand.toLowerCase().includes(searchTerm) ||
+                    yarn.colorway.toLowerCase().includes(searchTerm) ||
+                    yarn.color.toLowerCase().includes(searchTerm) ||
+                    yarn.weight.toLowerCase().includes(searchTerm) ||
+                    yarn.woolType.toLowerCase().includes(searchTerm) ||
+                    yarn.status.toLowerCase().includes(searchTerm) ||
+                    yarn.dyeLot.toLowerCase().includes(searchTerm) ||
+                    (yarn.notes && yarn.notes.toLowerCase().includes(searchTerm)) ||
+                    (yarn.characteristics && yarn.characteristics.some(char => 
+                        char.toLowerCase().includes(searchTerm)
+                    ))
+                );
 
-            displayYarn(filtered);
-        });
+                displayYarn(filtered);
+            });
+        }
 
         function initializeRating() {
-            const stars = document.querySelectorAll('.star');
+            const stars = document.querySelectorAll('#stars .star');
             const ratingInput = document.getElementById('rating');
+            
+            if (!stars.length || !ratingInput) return;
             
             stars.forEach((star, index) => {
                 star.addEventListener('click', function() {
@@ -1561,7 +1510,7 @@
                 });
             });
             
-            const starsContainer = document.querySelector('.stars');
+            const starsContainer = document.querySelector('#stars');
             if (starsContainer) {
                 starsContainer.addEventListener('mouseleave', function() {
                     const currentRating = parseInt(ratingInput.value) || 0;
@@ -1571,7 +1520,7 @@
         }
 
         function updateStarDisplay(rating) {
-            const stars = document.querySelectorAll('.star');
+            const stars = document.querySelectorAll('#stars .star');
             stars.forEach((star, index) => {
                 if (index < rating) {
                     star.classList.add('active');
@@ -1582,8 +1531,11 @@
         }
 
         function resetRating() {
-            document.getElementById('rating').value = '0';
-            updateStarDisplay(0);
+            const ratingInput = document.getElementById('rating');
+            if (ratingInput) {
+                ratingInput.value = '0';
+                updateStarDisplay(0);
+            }
         }
 
         function editYarn(id) {
@@ -1635,11 +1587,7 @@
             }
 
             document.getElementById('editModal').classList.add('show');
-            
-            // Initialize edit photo upload after modal is shown
-            setTimeout(() => {
-                initializeEditPhotoUpload();
-            }, 100);
+            initializeEditPhotoUpload();
         }
 
         function closeEditModal() {
@@ -1705,7 +1653,6 @@
                 photo: currentEditPhotoData
             };
 
-            saveData();
             displayYarn();
             closeEditModal();
             updateDataStatus(null, true);
@@ -1714,6 +1661,8 @@
         function initializeEditRating() {
             const stars = document.querySelectorAll('#editStars .star');
             const ratingInput = document.getElementById('editRating');
+            
+            if (!stars.length || !ratingInput) return;
             
             stars.forEach((star, index) => {
                 star.addEventListener('click', function() {
@@ -1761,32 +1710,13 @@
             if (previewImg) previewImg.src = '';
         }
 
-        function isLocalStorageAvailable() {
-            try {
-                if (typeof Storage === 'undefined' || typeof localStorage === 'undefined') {
-                    return false;
-                }
-                
-                const test = '__localStorage_test__';
-                localStorage.setItem(test, test);
-                localStorage.removeItem(test);
-                return true;
-            } catch (e) {
-                return false;
-            }
-        }
-
         function initializeApp() {
-            if (isLocalStorageAvailable()) {
-                loadData();
-            } else {
-                updateDataStatus('Session-only mode - data resets on refresh');
-                displayYarn();
-                updateStats();
-            }
+            displayYarn();
+            updateStats();
+            updateDataStatus('Session mode - data will be lost on refresh');
         }
 
-        // Initialize everything when DOM is ready
+        // Initialize the app when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 initializeApp();
