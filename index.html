@@ -468,7 +468,7 @@
 
         .yarn-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 10px;
         }
@@ -642,6 +642,261 @@
                                 <option value="Brown">Brown</option>
                                 <option value="Black">Black</option>
                                 <option value="Gray">Gray</option>
+                                <option value="Silver">Silver</option>
+                            </optgroup>
+                            <optgroup label="Reds & Pinks">
+                                <option value="Red">Red</option>
+                                <option value="Burgundy">Burgundy</option>
+                                <option value="Pink">Pink</option>
+                                <option value="Rose">Rose</option>
+                                <option value="Coral">Coral</option>
+                                <option value="Magenta">Magenta</option>
+                            </optgroup>
+                            <optgroup label="Oranges & Yellows">
+                                <option value="Orange">Orange</option>
+                                <option value="Peach">Peach</option>
+                                <option value="Yellow">Yellow</option>
+                                <option value="Gold">Gold</option>
+                                <option value="Mustard">Mustard</option>
+                            </optgroup>
+                            <optgroup label="Greens">
+                                <option value="Green">Green</option>
+                                <option value="Forest Green">Forest Green</option>
+                                <option value="Sage">Sage</option>
+                                <option value="Mint">Mint</option>
+                                <option value="Olive">Olive</option>
+                                <option value="Teal Green">Teal Green</option>
+                            </optgroup>
+                            <optgroup label="Blues">
+                                <option value="Blue">Blue</option>
+                                <option value="Navy">Navy</option>
+                                <option value="Royal Blue">Royal Blue</option>
+                                <option value="Sky Blue">Sky Blue</option>
+                                <option value="Teal Blue">Teal Blue</option>
+                                <option value="Turquoise">Turquoise</option>
+                                <option value="Aqua">Aqua</option>
+                            </optgroup>
+                            <optgroup label="Purples">
+                                <option value="Purple">Purple</option>
+                                <option value="Lavender">Lavender</option>
+                                <option value="Violet">Violet</option>
+                                <option value="Plum">Plum</option>
+                                <option value="Mauve">Mauve</option>
+                            </optgroup>
+                            <optgroup label="Multicolor">
+                                <option value="Multicolor">Multicolor</option>
+                                <option value="Rainbow">Rainbow</option>
+                                <option value="Ombre">Ombre</option>
+                                <option value="Speckled">Speckled</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dyeLot">Dye Lot</label>
+                        <input type="text" id="dyeLot" name="dyeLot" placeholder="Optional - for matching skeins">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="woolType">Wool Type</label>
+                        <select id="woolType" name="woolType" required>
+                            <option value="">Select wool type...</option>
+                            <option value="Wool">Wool</option>
+                            <option value="Wool Blend">Wool Blend</option>
+                            <option value="Acrylic">Acrylic</option>
+                            <option value="Cotton">Cotton</option>
+                            <option value="Alpaca">Alpaca</option>
+                            <option value="Silk">Silk</option>
+                            <option value="Linen">Linen</option>
+                            <option value="Bamboo">Bamboo</option>
+                            <option value="Cashmere">Cashmere</option>
+                            <option value="Mohair">Mohair</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="skeins">Number of Skeins</label>
+                        <input type="number" id="skeins" name="skeins" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight_amount">Weight per Skein</label>
+                        <div class="unit-input-group">
+                            <input type="number" id="weight_amount" name="weight_amount" min="1" required>
+                            <select id="weight_unit" name="weight_unit" required>
+                                <option value="g">grams</option>
+                                <option value="oz">ounces</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="length">Length per Skein</label>
+                        <div class="unit-input-group">
+                            <input type="number" id="length" name="length" min="1" required>
+                            <select id="length_unit" name="length_unit" required>
+                                <option value="m">meters</option>
+                                <option value="yds">yards</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Yarn Characteristics (select all that apply)</label>
+                        <div class="tags-group">
+                            <div class="tag-item">
+                                <input type="checkbox" id="handspun" name="handspun">
+                                <label for="handspun">Handspun</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="tweed" name="tweed">
+                                <label for="tweed">Tweed</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="tonal" name="tonal">
+                                <label for="tonal">Tonal</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="selfStriping" name="selfStriping">
+                                <label for="selfStriping">Self-striping</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="variegated" name="variegated">
+                                <label for="variegated">Variegated</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="gradient" name="gradient">
+                                <label for="gradient">Gradient</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="heathered" name="heathered">
+                                <label for="heathered">Heathered</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="marled" name="marled">
+                                <label for="marled">Marled</label>
+                            </div>
+                            <div class="tag-item">
+                                <input type="checkbox" id="superwash" name="superwash">
+                                <label for="superwash">Superwash</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status" required>
+                            <option value="">Select status...</option>
+                            <option value="Available">Available</option>
+                            <option value="Reserved">Reserved</option>
+                            <option value="In Use">In Use</option>
+                            <option value="Used Up">Used Up</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="yarnPhoto">Yarn Photo (optional)</label>
+                        <div class="photo-upload-container">
+                            <input type="file" id="yarnPhoto" name="yarnPhoto" accept="image/*" style="display: none;">
+                            <div class="photo-upload-area" id="photoUploadArea">
+                                <div class="upload-placeholder" id="uploadPlaceholder">
+                                    <div class="upload-icon">📷</div>
+                                    <div class="upload-text">Click to add photo</div>
+                                    <div class="upload-subtext">JPG, PNG, or HEIC</div>
+                                </div>
+                                <div class="photo-preview" id="photoPreview" style="display: none;">
+                                    <img id="previewImage" src="" alt="Yarn preview">
+                                    <button type="button" class="remove-photo-btn" id="removePhotoBtn">×</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rating">Your Rating</label>
+                        <div class="rating-group">
+                            <div class="stars">
+                                <span class="star" data-rating="1">👍</span>
+                                <span class="star" data-rating="2">👍</span>
+                                <span class="star" data-rating="3">👍</span>
+                                <span class="star" data-rating="4">👍</span>
+                                <span class="star" data-rating="5">👍</span>
+                            </div>
+                            <span class="rating-text">Click to rate (1-5 thumbs up)</span>
+                            <input type="hidden" id="rating" name="rating" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes (optional)</label>
+                        <textarea id="notes" name="notes" placeholder="Project plans, yarn remaining, or other notes..." rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Add to Stash</button>
+                </form>
+            </div>
+
+            <div class="stash-list">
+                <h2 class="stash-title">Your Yarn Stash</h2>
+                <input type="text" class="search-box" id="searchBox" placeholder="Search your stash...">
+                <div id="yarnList">
+                    <div class="empty-state">
+                        <h3>Your stash is empty</h3>
+                        <p>Add some yarn to get started!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Yarn</h2>
+                <button class="close-modal" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editYarnForm">
+                <input type="hidden" id="editYarnId">
+                
+                <div class="form-group">
+                    <label for="editBrand">Yarn Brand</label>
+                    <input type="text" id="editBrand" name="editBrand" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editWeight">Yarn Weight</label>
+                    <select id="editWeight" name="editWeight" required>
+                        <option value="">Select weight...</option>
+                        <option value="Lace">Lace</option>
+                        <option value="Fingering">Fingering</option>
+                        <option value="Sport">Sport</option>
+                        <option value="DK">DK</option>
+                        <option value="Worsted">Worsted</option>
+                        <option value="Aran">Aran</option>
+                        <option value="Bulky">Bulky</option>
+                        <option value="Super Bulky">Super Bulky</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editColorway">Colorway Name</label>
+                    <input type="text" id="editColorway" name="editColorway" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editColor">Primary Color</label>
+                    <select id="editColor" name="editColor">
+                        <option value="">Select color...</option>
+                        <optgroup label="Neutrals">
+                            <option value="White">White</option>
+                            <option value="Cream">Cream</option>
+                            <option value="Beige">Beige</option>
+                            <option value="Tan">Tan</option>
+                            <option value="Brown">Brown</option>
+                            <option value="Black">Black</option>
+                            <option value="Gray">Gray</option>
                             <option value="Silver">Silver</option>
                         </optgroup>
                         <optgroup label="Reds & Pinks">
@@ -920,10 +1175,12 @@
                 }
             });
 
-            removeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                clearMainPhoto();
-            });
+            if (removeBtn) {
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    clearMainPhoto();
+                });
+            }
 
             async function handleMainFile(file) {
                 if (!file.type.startsWith('image/')) {
@@ -955,8 +1212,15 @@
 
         function initializeEditPhotoUpload() {
             const photoInput = document.getElementById('editYarnPhoto');
+            const uploadArea = document.getElementById('editPhotoUploadArea');
+            const removeBtn = document.getElementById('editRemovePhotoBtn');
 
-            if (!photoInput) return;
+            if (!photoInput || !uploadArea) return;
+
+            uploadArea.addEventListener('click', function(e) {
+                e.preventDefault();
+                photoInput.click();
+            });
 
             photoInput.addEventListener('change', async function(e) {
                 const file = e.target.files[0];
@@ -964,6 +1228,13 @@
                     await handleEditFile(file);
                 }
             });
+
+            if (removeBtn) {
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    clearEditPhoto();
+                });
+            }
 
             async function handleEditFile(file) {
                 if (!file.type.startsWith('image/')) {
@@ -1290,10 +1561,13 @@
                 });
             });
             
-            document.querySelector('.stars').addEventListener('mouseleave', function() {
-                const currentRating = parseInt(ratingInput.value) || 0;
-                updateStarDisplay(currentRating);
-            });
+            const starsContainer = document.querySelector('.stars');
+            if (starsContainer) {
+                starsContainer.addEventListener('mouseleave', function() {
+                    const currentRating = parseInt(ratingInput.value) || 0;
+                    updateStarDisplay(currentRating);
+                });
+            }
         }
 
         function updateStarDisplay(rating) {
@@ -1330,6 +1604,7 @@
             document.getElementById('editLengthUnit').value = yarn.length_unit || 'm';
             document.getElementById('editStatus').value = yarn.status;
             document.getElementById('editRating').value = yarn.rating || 0;
+            document.getElementById('editNotes').value = yarn.notes || '';
 
             const characteristics = yarn.characteristics || [];
             document.getElementById('editHandspun').checked = characteristics.includes('handspun');
@@ -1361,14 +1636,10 @@
 
             document.getElementById('editModal').classList.add('show');
             
-            const editUploadArea = document.getElementById('editPhotoUploadArea');
-            if (editUploadArea) {
-                editUploadArea.onclick = function() {
-                    document.getElementById('editYarnPhoto').click();
-                };
-            }
-            
-            initializeEditPhotoUpload();
+            // Initialize edit photo upload after modal is shown
+            setTimeout(() => {
+                initializeEditPhotoUpload();
+            }, 100);
         }
 
         function closeEditModal() {
@@ -1397,6 +1668,7 @@
             const length_unit = document.getElementById('editLengthUnit').value;
             const status = document.getElementById('editStatus').value;
             const rating = document.getElementById('editRating').value;
+            const notes = document.getElementById('editNotes').value.trim();
 
             const characteristics = [];
             const editCheckboxes = ['editHandspun', 'editTweed', 'editTonal', 'editSelfStriping', 'editVariegated', 'editGradient', 'editHeathered', 'editMarled', 'editSuperwash'];
@@ -1429,6 +1701,7 @@
                 rating: parseInt(rating),
                 status: status,
                 characteristics: characteristics,
+                notes: notes,
                 photo: currentEditPhotoData
             };
 
@@ -1455,10 +1728,13 @@
                 });
             });
             
-            document.querySelector('#editStars').addEventListener('mouseleave', function() {
-                const currentRating = parseInt(ratingInput.value) || 0;
-                updateEditStarDisplay(currentRating);
-            });
+            const editStarsContainer = document.querySelector('#editStars');
+            if (editStarsContainer) {
+                editStarsContainer.addEventListener('mouseleave', function() {
+                    const currentRating = parseInt(ratingInput.value) || 0;
+                    updateEditStarDisplay(currentRating);
+                });
+            }
         }
 
         function updateEditStarDisplay(rating) {
@@ -1479,10 +1755,10 @@
             const preview = document.getElementById('photoPreview');
             const previewImg = document.getElementById('previewImage');
             
-            photoInput.value = '';
-            placeholder.style.display = 'flex';
-            preview.style.display = 'none';
-            previewImg.src = '';
+            if (photoInput) photoInput.value = '';
+            if (placeholder) placeholder.style.display = 'flex';
+            if (preview) preview.style.display = 'none';
+            if (previewImg) previewImg.src = '';
         }
 
         function isLocalStorageAvailable() {
@@ -1510,6 +1786,7 @@
             }
         }
 
+        // Initialize everything when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 initializeApp();
@@ -1525,259 +1802,4 @@
         }
     </script>
 </body>
-</html></option>
-                                <option value="Silver">Silver</option>
-                            </optgroup>
-                            <optgroup label="Reds & Pinks">
-                                <option value="Red">Red</option>
-                                <option value="Burgundy">Burgundy</option>
-                                <option value="Pink">Pink</option>
-                                <option value="Rose">Rose</option>
-                                <option value="Coral">Coral</option>
-                                <option value="Magenta">Magenta</option>
-                            </optgroup>
-                            <optgroup label="Oranges & Yellows">
-                                <option value="Orange">Orange</option>
-                                <option value="Peach">Peach</option>
-                                <option value="Yellow">Yellow</option>
-                                <option value="Gold">Gold</option>
-                                <option value="Mustard">Mustard</option>
-                            </optgroup>
-                            <optgroup label="Greens">
-                                <option value="Green">Green</option>
-                                <option value="Forest Green">Forest Green</option>
-                                <option value="Sage">Sage</option>
-                                <option value="Mint">Mint</option>
-                                <option value="Olive">Olive</option>
-                                <option value="Teal Green">Teal Green</option>
-                            </optgroup>
-                            <optgroup label="Blues">
-                                <option value="Blue">Blue</option>
-                                <option value="Navy">Navy</option>
-                                <option value="Royal Blue">Royal Blue</option>
-                                <option value="Sky Blue">Sky Blue</option>
-                                <option value="Teal Blue">Teal Blue</option>
-                                <option value="Turquoise">Turquoise</option>
-                                <option value="Aqua">Aqua</option>
-                            </optgroup>
-                            <optgroup label="Purples">
-                                <option value="Purple">Purple</option>
-                                <option value="Lavender">Lavender</option>
-                                <option value="Violet">Violet</option>
-                                <option value="Plum">Plum</option>
-                                <option value="Mauve">Mauve</option>
-                            </optgroup>
-                            <optgroup label="Multicolor">
-                                <option value="Multicolor">Multicolor</option>
-                                <option value="Rainbow">Rainbow</option>
-                                <option value="Ombre">Ombre</option>
-                                <option value="Speckled">Speckled</option>
-                            </optgroup>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="dyeLot">Dye Lot</label>
-                        <input type="text" id="dyeLot" name="dyeLot" placeholder="Optional - for matching skeins">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="woolType">Wool Type</label>
-                        <select id="woolType" name="woolType" required>
-                            <option value="">Select wool type...</option>
-                            <option value="Wool">Wool</option>
-                            <option value="Wool Blend">Wool Blend</option>
-                            <option value="Acrylic">Acrylic</option>
-                            <option value="Cotton">Cotton</option>
-                            <option value="Alpaca">Alpaca</option>
-                            <option value="Silk">Silk</option>
-                            <option value="Linen">Linen</option>
-                            <option value="Bamboo">Bamboo</option>
-                            <option value="Cashmere">Cashmere</option>
-                            <option value="Mohair">Mohair</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="skeins">Number of Skeins</label>
-                        <input type="number" id="skeins" name="skeins" min="1" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="weight_amount">Weight per Skein</label>
-                        <div class="unit-input-group">
-                            <input type="number" id="weight_amount" name="weight_amount" min="1" required>
-                            <select id="weight_unit" name="weight_unit" required>
-                                <option value="g">grams</option>
-                                <option value="oz">ounces</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="length">Length per Skein</label>
-                        <div class="unit-input-group">
-                            <input type="number" id="length" name="length" min="1" required>
-                            <select id="length_unit" name="length_unit" required>
-                                <option value="m">meters</option>
-                                <option value="yds">yards</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Yarn Characteristics (select all that apply)</label>
-                        <div class="tags-group">
-                            <div class="tag-item">
-                                <input type="checkbox" id="handspun" name="handspun">
-                                <label for="handspun">Handspun</label>
-                            </div>
-                            <div class="tag-item">
-                                <input type="checkbox" id="tweed" name="tweed">
-                                <label for="tweed">Tweed</label>
-                            </div>
-                            <div class="tag-item">
-                                <input type="checkbox" id="tonal" name="tonal">
-                                <label for="tonal">Tonal</label>
-                            </div>
-                            <div class="tag-item">
-                                <input type="checkbox" id="selfStriping" name="selfStriping">
-                                <label for="selfStriping">Self-striping</label>
-                            </div>
-                            <div class="tag-item">
-                                <input type="checkbox" id="variegated" name="variegated">
-                                <label for="variegated">Variegated</label>
-                            </div>
-                            <div class="tag-item">
-                                <input type="checkbox" id="gradient" name="gradient">
-                                <label for="gradient">Gradient</label>
-                            </div>
-                            <div class="tag-item">
-                                <input type="checkbox" id="heathered" name="heathered">
-                                <label for="heathered">Heathered</label>
-                            </div>
-                            <div class="tag-item">
-                                <input type="checkbox" id="marled" name="marled">
-                                <label for="marled">Marled</label>
-                            </div>
-                            <div class="tag-item">
-                                <input type="checkbox" id="superwash" name="superwash">
-                                <label for="superwash">Superwash</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status" name="status" required>
-                            <option value="">Select status...</option>
-                            <option value="Available">Available</option>
-                            <option value="Reserved">Reserved</option>
-                            <option value="In Use">In Use</option>
-                            <option value="Used Up">Used Up</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="yarnPhoto">Yarn Photo (optional)</label>
-                        <div class="photo-upload-container">
-                            <input type="file" id="yarnPhoto" name="yarnPhoto" accept="image/*" style="display: none;">
-                            <div class="photo-upload-area" id="photoUploadArea">
-                                <div class="upload-placeholder" id="uploadPlaceholder">
-                                    <div class="upload-icon">📷</div>
-                                    <div class="upload-text">Click to add photo</div>
-                                    <div class="upload-subtext">JPG, PNG, or HEIC</div>
-                                </div>
-                                <div class="photo-preview" id="photoPreview" style="display: none;">
-                                    <img id="previewImage" src="" alt="Yarn preview">
-                                    <button type="button" class="remove-photo-btn" id="removePhotoBtn">×</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="rating">Your Rating</label>
-                        <div class="rating-group">
-                            <div class="stars">
-                                <span class="star" data-rating="1">👍</span>
-                                <span class="star" data-rating="2">👍</span>
-                                <span class="star" data-rating="3">👍</span>
-                                <span class="star" data-rating="4">👍</span>
-                                <span class="star" data-rating="5">👍</span>
-                            </div>
-                            <span class="rating-text">Click to rate (1-5 thumbs up)</span>
-                            <input type="hidden" id="rating" name="rating" value="0">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notes">Notes (optional)</label>
-                        <textarea id="notes" name="notes" placeholder="Project plans, yarn remaining, or other notes..." rows="3"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn">Add to Stash</button>
-                </form>
-            </div>
-
-            <div class="stash-list">
-                <h2 class="stash-title">Your Yarn Stash</h2>
-                <input type="text" class="search-box" id="searchBox" placeholder="Search your stash...">
-                <div id="yarnList">
-                    <div class="empty-state">
-                        <h3>Your stash is empty</h3>
-                        <p>Add some yarn to get started!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Edit Yarn</h2>
-                <button class="close-modal" onclick="closeEditModal()">&times;</button>
-            </div>
-            <form id="editYarnForm">
-                <input type="hidden" id="editYarnId">
-                
-                <div class="form-group">
-                    <label for="editBrand">Yarn Brand</label>
-                    <input type="text" id="editBrand" name="editBrand" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="editWeight">Yarn Weight</label>
-                    <select id="editWeight" name="editWeight" required>
-                        <option value="">Select weight...</option>
-                        <option value="Lace">Lace</option>
-                        <option value="Fingering">Fingering</option>
-                        <option value="Sport">Sport</option>
-                        <option value="DK">DK</option>
-                        <option value="Worsted">Worsted</option>
-                        <option value="Aran">Aran</option>
-                        <option value="Bulky">Bulky</option>
-                        <option value="Super Bulky">Super Bulky</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="editColorway">Colorway Name</label>
-                    <input type="text" id="editColorway" name="editColorway" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="editColor">Primary Color</label>
-                    <select id="editColor" name="editColor">
-                        <option value="">Select color...</option>
-                        <optgroup label="Neutrals">
-                            <option value="White">White</option>
-                            <option value="Cream">Cream</option>
-                            <option value="Beige">Beige</option>
-                            <option value="Tan">Tan</option>
-                            <option value="Brown">Brown</option>
-                            <option value="Black">Black</option>
-                            <option value="Gray">Gray
+</html>
